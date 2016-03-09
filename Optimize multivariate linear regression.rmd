@@ -16,8 +16,8 @@ set.seed(11)
 x <- matrix(rnorm(400), ncol = 4) # so this is a 100x4 predictor matrix 
 y <- rnorm(100)                   # this is our outcome variable, a 100x1 vector
 m <- length(y)  
-X<-cbind(rep(1, 100), x)      # adding a column of 1s as intercept to the design matrix X (100 x 5)
-theta<-rep(0,5)               # set up the initial theta 5 x 1 vector
+X <- cbind(rep(1, 100), x)      # adding a column of 1s as intercept to the design matrix X (100 x 5)
+theta <- rep(0,5)                 # set up the initial theta 5 x 1 vector
 ```
 
 #### Next, let's define the cost function for linear regression, this is a vectorized method:
