@@ -5,7 +5,7 @@ date: "March 9, 2016"
 output: html_document
 ---
 
-In the Courseara ML class, Dr.Ng talked aboutthe advanced optimization methods to find
+In the Coursera ML class, Dr.Ng talked about the advanced optimization methods to find
 regression fits for logistic regression. He demonstrated the function `fminunc` in matlab; however, I wanted to find a way to implement this in R and apply it to linear regression instead. 
 
 It happens that the `optim` function in R do the same advanced optimization algorithm over the function cost. 
