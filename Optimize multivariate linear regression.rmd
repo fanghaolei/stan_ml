@@ -32,3 +32,18 @@ return(J)
 ```{r optimization, echo=TRUE}
 optim(par = theta, fn = compCost, X = X, y = y, method = "BFGS")
 ```
+$par
+[1]  0.04636348  0.09681103  0.10089706 -0.11856090 -0.20665898
+
+$value
+[1] 0.5342071
+ 
+$counts
+function gradient 
+       9        5 
+
+$convergence
+ [1] 0
+
+$message
+NULL
