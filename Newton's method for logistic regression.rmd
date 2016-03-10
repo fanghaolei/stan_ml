@@ -1,0 +1,76 @@
+---
+title: "Using Newton's method for logistic regression"
+author: "Mike Fang"
+date: "March 9, 2016"
+output: html_document
+---
+I happen to find the old version of the Coursera ML class, in which Dr. Ng demonstrated the Newton's method to optimize logistic regression. This is very interesting because it is not available in the current version of the ML class. So I decided to implement this method in R. 
+
+As always, let's generate some data to work with:
+```{r }
+set.seed(11)
+x <- matrix(rnorm(400), ncol = 4)
+y <- round(runif(100, 0, 1)) # create a binary outcome
+m <- length(y)
+X<-cbind(rep(1, 100), x)
+theta<-rep(0, 5)
+```
+
+Next, let's define the cost function of logistic regression
+```{r }
+# defeine the sigmoid (logsitic) regression
+sigmoid <- function(x){
+  1/(1+exp(-x))
+}
+
+# cost function
+compCost <- function(theta, X, y){
+  
+# X%*%theta in this given example is a 100x1 column vector
+  J <- (-1/m)*sum(y*log(sigmoid(X%*%theta)) + (1-y)*log(1-sigmoid(X%*%theta)))
+  
+return(J)
+}
+```
+Then, we can define the function which utilize the Newton's method, in which 
+theta is simultaneous updated by subtracting the product term of the 
+inverse matrix of the second partial derivatives w.r.t theta of the cost function (Hessian's matrix) and the gradient vector w.r.t theta of the cost function.
+
+Although R is not a tool that specialized in mathematical computing, the `hessian` function from
+the `numDeriv` package calculates Hessian matrix gracefully. 
+
+```{r newton}
+
+newton <- function(X, y, theta, num_iter){
+  library(numDeriv)
+  library(MASS)
+  J_hist<-vector()
+  # the loop for the iterative process
+  for(i in 1:num_iter){
+    grad <- (1/m)*(t(X)%*%(sigmoid(X%*%theta) - y)) 
+    H <- hessian(compCost, theta, method = "complex", X = X, y = y)
+  # an alternative way to calculate the Hessian's matrix is to use the `jacobian` function
+  # in regarding to grad. Because the Hessian's matrix is the Jacobian matrix of the gradient
+  # (first partial derivative).
+  
+    theta <- theta - ginv(H)%*%grad
+    J_hist[i] <- compCost(theta, X, y)
+  }
+  result <- list(theta, J_hist)
+return(result)
+}
+```
+
+Let's see the final output:
+```{r output}
+num_iter = 20
+result <- newton(X, y, theta, num_iter)
+theta <- result[[1]]
+print(theta)
+```
+Well, the data we generated doesn't seem to be a good example. We only need 1 iteration to reach the optimal fit.
+
+```{r plot}
+cost_hist <- result[[2]]
+plot(1:num_iter, cost_hist, type = 'l')
+```
